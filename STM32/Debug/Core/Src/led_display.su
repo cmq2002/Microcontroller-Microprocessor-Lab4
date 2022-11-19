@@ -1,0 +1,5 @@
+../Core/Src/led_display.c:9:6:toggleRED	8	static
+../Core/Src/led_display.c:13:6:toggleGREEN	8	static
+../Core/Src/led_display.c:17:6:toggleYELLOW	8	static
+../Core/Src/led_display.c:21:6:toggleBLUE	8	static
+../Core/Src/led_display.c:25:6:togglePINK	8	static
