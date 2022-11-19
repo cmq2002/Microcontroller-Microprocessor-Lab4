@@ -27,23 +27,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000029  00000000  00000000  0002000c  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00007f78  00000000  00000000  00020035  2**0
+ 12 .debug_info   00007fb4  00000000  00000000  00020035  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00001600  00000000  00000000  00027fad  2**0
+ 13 .debug_abbrev 00001636  00000000  00000000  00027fe9  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 00000968  00000000  00000000  000295b0  2**3
+ 14 .debug_aranges 00000970  00000000  00000000  00029620  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_ranges 000008b0  00000000  00000000  00029f18  2**3
+ 15 .debug_ranges 000008b8  00000000  00000000  00029f90  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  0001622a  00000000  00000000  0002a7c8  2**0
+ 16 .debug_macro  0001622a  00000000  00000000  0002a848  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00009544  00000000  00000000  000409f2  2**0
+ 17 .debug_line   00009573  00000000  00000000  00040a72  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00081ab1  00000000  00000000  00049f36  2**0
+ 18 .debug_str    00081aca  00000000  00000000  00049fe5  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000050  00000000  00000000  000cb9e7  2**0
+ 19 .comment      00000050  00000000  00000000  000cbaaf  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  0000266c  00000000  00000000  000cba38  2**2
+ 20 .debug_frame  00002690  00000000  00000000  000cbb00  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -135,7 +135,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  SCH_Add_Task(led1test, 5, 100); //Delay 0.5s, 5s
+  SCH_Add_Task(led1test, 5, 100); //Delay 0.5s, 1s
  800017a:	2264      	movs	r2, #100	; 0x64
  800017c:	2105      	movs	r1, #5
  800017e:	4804      	ldr	r0, [pc, #16]	; (8000190 <main+0x30>)
@@ -459,10 +459,10 @@ __STATIC_FORCEINLINE void __disable_irq(void)
 	...
 
 08000328 <SCH_Add_Task>:
+//	Timer_init();
+//	Watchdog_init();
+}
 
-#include "scheduler.h"
-sTasks SCH_tasks_G[SCH_MAX_TASKS];
-uint8_t current_index_task = 0;
 
 void SCH_Add_Task ( void (*pFunction)() , uint32_t DELAY, uint32_t PERIOD){
  8000328:	b480      	push	{r7}
@@ -569,7 +569,7 @@ void SCH_Update(void){
  80003d4:	b480      	push	{r7}
  80003d6:	b083      	sub	sp, #12
  80003d8:	af00      	add	r7, sp, #0
-	for (int i =0; i < current_index_task; i++){
+	for(int i = 0; i < current_index_task; i++){
  80003da:	2300      	movs	r3, #0
  80003dc:	607b      	str	r3, [r7, #4]
  80003de:	e048      	b.n	8000472 <SCH_Update+0x9e>
@@ -585,7 +585,7 @@ void SCH_Update(void){
  80003f0:	681b      	ldr	r3, [r3, #0]
  80003f2:	2b00      	cmp	r3, #0
  80003f4:	d013      	beq.n	800041e <SCH_Update+0x4a>
-			SCH_tasks_G[i].Delay--;
+			SCH_tasks_G[i].Delay --;
  80003f6:	4925      	ldr	r1, [pc, #148]	; (800048c <SCH_Update+0xb8>)
  80003f8:	687a      	ldr	r2, [r7, #4]
  80003fa:	4613      	mov	r3, r2
@@ -648,7 +648,7 @@ void SCH_Update(void){
  8000466:	330c      	adds	r3, #12
  8000468:	4602      	mov	r2, r0
  800046a:	701a      	strb	r2, [r3, #0]
-	for (int i =0; i < current_index_task; i++){
+	for(int i = 0; i < current_index_task; i++){
  800046c:	687b      	ldr	r3, [r7, #4]
  800046e:	3301      	adds	r3, #1
  8000470:	607b      	str	r3, [r7, #4]

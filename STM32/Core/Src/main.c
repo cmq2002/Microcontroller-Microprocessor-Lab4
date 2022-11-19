@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "software_timer.h"
 #include "scheduler.h"
+#include "led_display.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,9 +58,7 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void led1test(){
-	HAL_GPIO_TogglePin(RED_GPIO_Port, RED_Pin);
-}
+
 /* USER CODE END 0 */
 
 /**
@@ -98,7 +97,11 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  SCH_Add_Task(led1test, 5, 100); //Delay 0.5s, 1s
+  SCH_Add_Task(toggleRED, 0, 50);
+  SCH_Add_Task(toggleGREEN, 5, 100);
+  SCH_Add_Task(toggleYELLOW, 10, 150);
+  SCH_Add_Task(toggleBLUE, 15, 200);
+  SCH_Add_Task(togglePINK, 20, 250);
   while (1)
   {
 	  SCH_Dispatch_Tasks();
@@ -203,14 +206,17 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(RED_GPIO_Port, RED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, RED_Pin|GREEN_Pin|YELLOW_Pin|BLUE_Pin
+                          |PINK_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : RED_Pin */
-  GPIO_InitStruct.Pin = RED_Pin;
+  /*Configure GPIO pins : RED_Pin GREEN_Pin YELLOW_Pin BLUE_Pin
+                           PINK_Pin */
+  GPIO_InitStruct.Pin = RED_Pin|GREEN_Pin|YELLOW_Pin|BLUE_Pin
+                          |PINK_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(RED_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 
