@@ -10,19 +10,15 @@
 sTasks SCH_tasks_G[SCH_MAX_TASKS];
 uint8_t current_index_task = 0;
 
-void SCH_Init(void){
-	for (int i=0; i<SCH_MAX_TASKS; i++){
-		SCH_Delete_Task(i);
-	}
-}
+uint32_t task0_Delay;
 
-void swap (sTasks *a, sTasks *b){
+void SCH_Swap_Task(sTasks *a, sTasks *b){
 	sTasks temp = *a;
 	*a = *b;
 	*b = temp;
 }
 
-void SCH_Sort_Task(void){
+void SCH_Sort_Task(){
 	// Perform bubble sort algorithm
 	uint8_t current = 0;
 	uint8_t flag = 0;
@@ -32,11 +28,11 @@ void SCH_Sort_Task(void){
 		while (walker > current){
 			if (SCH_tasks_G[walker].Delay < SCH_tasks_G[walker-1].Delay){
 				flag = 0;
-				swap(&SCH_tasks_G[walker], &SCH_tasks_G[walker-1]);
+				SCH_Swap_Task(&SCH_tasks_G[walker], &SCH_tasks_G[walker-1]);
 			}
-			walker -= 1;
+			walker = walker - 1;
 		}
-		current += 1;
+		current = current + 1;
 	}
 
 	// Reassign the taskID
@@ -45,8 +41,7 @@ void SCH_Sort_Task(void){
 	}
 }
 
-
-void SCH_Add_Task ( void (*pFunction)() , uint32_t DELAY, uint32_t PERIOD){
+void SCH_Add_Task (void (*pFunction)(), uint32_t DELAY, uint32_t PERIOD){
 	if(current_index_task < SCH_MAX_TASKS){
 
 		SCH_tasks_G[current_index_task].pTask = pFunction;
@@ -61,8 +56,9 @@ void SCH_Add_Task ( void (*pFunction)() , uint32_t DELAY, uint32_t PERIOD){
 	}
 }
 
+
 void SCH_Delete_Task (uint32_t taskID){
-	for (int i=taskID; i<current_index_task-1; i++){
+	for (int i=taskID; i<(current_index_task-1); i++){
 		SCH_tasks_G[i]=SCH_tasks_G[i+1];
 	}
 
@@ -71,7 +67,7 @@ void SCH_Delete_Task (uint32_t taskID){
 	SCH_tasks_G[current_index_task-1].Period = 0;
 	SCH_tasks_G[current_index_task-1].RunMe = 0;
 
-	current_index_task -=1;
+	current_index_task--;
 }
 
 void SCH_Dispatch_Tasks(void){
@@ -79,29 +75,38 @@ void SCH_Dispatch_Tasks(void){
 		if(SCH_tasks_G[0].RunMe > 0){
 			SCH_tasks_G[0].RunMe--;
 			(*SCH_tasks_G[0].pTask)();
-		}
 
-		// Delay of task #1 to #n now is the offset of task #0's delay
-		for (int i=0; i<current_index_task; i++){
-			SCH_tasks_G[i].Delay -= SCH_tasks_G[0].Delay;
-		}
 
-		if (SCH_tasks_G[1].Delay <= 0){
-			SCH_tasks_G[1].RunMe += 1;
-		}
+			// Delay of task #1 to #n now is the offset of task #0's delay
+			for (int i=1; i<current_index_task; i++){
+				SCH_tasks_G[i].Delay =  SCH_tasks_G[i].Delay - task0_Delay;
+			}
 
-		if (SCH_tasks_G[0].Period > 0){
-			SCH_Add_Task(SCH_tasks_G[0].pTask, SCH_tasks_G[0].Period, SCH_tasks_G[0].Period);
+			// Task #1 ready to be performed
+			if (SCH_tasks_G[1].Delay == 0){
+				SCH_tasks_G[1].RunMe++;
+			}
+
+			// Sequentially add task #0 back to the ready queue -> ensure that group of tasks will be performed like a forever loop
+			if (SCH_tasks_G[0].Period > 0){
+				SCH_Add_Task(SCH_tasks_G[0].pTask, SCH_tasks_G[0].Period, SCH_tasks_G[0].Period);
+			}
+			SCH_Delete_Task(0);
+			task0_Delay = SCH_tasks_G[0].Delay;
 		}
-		SCH_Delete_Task(0);
 	}
 }
 
 void SCH_Update(void){
-	if (SCH_tasks_G[0].Delay > 0){
-		SCH_tasks_G[0].Delay -= 1;
-	}else{
-//		SCH_tasks_G[0].Delay = SCH_tasks_G[0].Period;
-		SCH_tasks_G[0].RunMe += 1;
-	}
+	if (SCH_tasks_G[0].Delay > 0) SCH_tasks_G[0].Delay--;
+	else SCH_tasks_G[0].RunMe++;
+}
+
+void SCH_Testing(void){
+	  SCH_Add_Task(toggleRED, 0, 50);
+	  SCH_Add_Task(toggleGREEN, 5, 100);
+	  SCH_Add_Task(toggleYELLOW, 10, 150);
+	  SCH_Add_Task(toggleBLUE, 15, 200);
+	  SCH_Add_Task(togglePINK, 20, 250);
+	  task0_Delay = SCH_tasks_G[0].Delay;
 }

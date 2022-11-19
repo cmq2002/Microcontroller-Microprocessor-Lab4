@@ -97,14 +97,14 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  SCH_Add_Task(toggleRED, 0, 50);
-  SCH_Add_Task(toggleGREEN, 5, 100);
-  SCH_Add_Task(toggleYELLOW, 10, 150);
-  SCH_Add_Task(toggleBLUE, 15, 200);
-  SCH_Add_Task(togglePINK, 20, 250);
+  SCH_Testing();
   while (1)
   {
 	  SCH_Dispatch_Tasks();
+//	  if (timer1_flag == 1){
+//		  togglePINK();
+//		  setTimer1(100);
+//	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -223,7 +223,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback (TIM_HandleTypeDef *htim)
 {
-//	timerRun();
+	timerRun();
 //	getKeyInput();
 	SCH_Update();
 }
