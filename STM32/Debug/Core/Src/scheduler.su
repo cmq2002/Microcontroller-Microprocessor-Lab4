@@ -1,7 +1,7 @@
-../Core/Src/scheduler.c:15:6:SCH_Swap_Task	48	static
-../Core/Src/scheduler.c:21:6:SCH_Sort_Task	16	static
-../Core/Src/scheduler.c:44:6:SCH_Add_Task	24	static
-../Core/Src/scheduler.c:60:6:SCH_Delete_Task	32	static
-../Core/Src/scheduler.c:73:6:SCH_Dispatch_Tasks	16	static
-../Core/Src/scheduler.c:100:6:SCH_Update	4	static
-../Core/Src/scheduler.c:105:6:SCH_Testing	8	static
+../Core/Src/scheduler.c:14:6:SCH_Swap_Task	48	static
+../Core/Src/scheduler.c:20:6:SCH_Sort_Task	16	static
+../Core/Src/scheduler.c:43:6:SCH_Add_Task	24	static
+../Core/Src/scheduler.c:59:6:SCH_Delete_Task	32	static
+../Core/Src/scheduler.c:72:6:SCH_Dispatch_Tasks	16	static
+../Core/Src/scheduler.c:99:6:SCH_Update	4	static
+../Core/Src/scheduler.c:104:6:SCH_Testing	8	static

@@ -61,7 +61,7 @@ void SCH_Delete_Task (uint32_t taskID){
 		SCH_tasks_G[i]=SCH_tasks_G[i+1];
 	}
 
-	SCH_tasks_G[current_index_task-1].pTask = 0x0000;
+	SCH_tasks_G[current_index_task-1].pTask = NULL;
 	SCH_tasks_G[current_index_task-1].Delay = 0;
 	SCH_tasks_G[current_index_task-1].Period = 0;
 	SCH_tasks_G[current_index_task-1].RunMe = 0;
@@ -70,7 +70,7 @@ void SCH_Delete_Task (uint32_t taskID){
 }
 
 void SCH_Dispatch_Tasks(void){
-	while(SCH_tasks_G[0].pTask != 0x0000){
+	while(SCH_tasks_G[0].pTask != NULL){
 		if(SCH_tasks_G[0].RunMe > 0){
 			SCH_tasks_G[0].RunMe--;
 			(*SCH_tasks_G[0].pTask)();
@@ -86,7 +86,7 @@ void SCH_Dispatch_Tasks(void){
 				SCH_tasks_G[1].RunMe++;
 			}
 
-			// Sequentially add task #0 back to the ready queue -> ensure that group of tasks will be performed like a forever loop
+			// Sequentially add task #0 back to the ready queue -> ensure that group of tasks will be performed as a forever loop
 			if (SCH_tasks_G[0].Period > 0){
 				SCH_Add_Task(SCH_tasks_G[0].pTask, SCH_tasks_G[0].Period, SCH_tasks_G[0].Period);
 			}
