@@ -9,8 +9,7 @@
 
 sTasks SCH_tasks_G[SCH_MAX_TASKS];
 uint8_t current_index_task = 0;
-
-uint32_t task0_Delay;
+uint32_t task0_Delay = 0;
 
 void SCH_Swap_Task(sTasks *a, sTasks *b){
 	sTasks temp = *a;
@@ -79,7 +78,7 @@ void SCH_Dispatch_Tasks(void){
 
 			// Delay of task #1 to #n now is the offset of task #0's delay
 			for (int i=1; i<current_index_task; i++){
-				SCH_tasks_G[i].Delay =  SCH_tasks_G[i].Delay - task0_Delay;
+				SCH_tasks_G[i].Delay -=  task0_Delay;
 			}
 
 			// Task #1 ready to be performed
