@@ -25,9 +25,7 @@ typedef struct{
 
 void SCH_Init();
 
-void SCH_Sort_Task();
-
-void SCH_Swap_Task(sTasks *a, sTasks *b);
+void SCH_MakePlaceForNewTask(uint8_t pos);
 
 void SCH_Add_Task (void (*pFunction)(), uint32_t DELAY, uint32_t PERIOD);
 
