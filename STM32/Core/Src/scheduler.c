@@ -47,6 +47,7 @@ void SCH_Add_Task (void (*pFunction)(), uint32_t DELAY, uint32_t PERIOD){
 		SCH_tasks_G[current_index_task].Delay = DELAY;
 		SCH_tasks_G[current_index_task].Period =  PERIOD;
 		SCH_tasks_G[current_index_task].RunMe = 0;
+
 		SCH_tasks_G[current_index_task].TaskID = current_index_task;
 
 		current_index_task++;
@@ -86,11 +87,16 @@ void SCH_Dispatch_Tasks(void){
 				SCH_tasks_G[1].RunMe++;
 			}
 
-			// Sequentially add task #0 back to the ready queue -> ensure that group of tasks will be performed as a forever loop
-			if (SCH_tasks_G[0].Period > 0){
-				SCH_Add_Task(SCH_tasks_G[0].pTask, SCH_tasks_G[0].Period, SCH_tasks_G[0].Period);
-			}
+			// Backup before remove
+			sTasks backup = SCH_tasks_G[0];
+
+			// Remove task #0
 			SCH_Delete_Task(0);
+
+			// Sequentially add task #0 back to the ready queue
+			// -> ensure that group of tasks will be performed as a forever loop
+			SCH_Add_Task(backup.pTask, backup.Period, backup.Period);
+
 			task0_Delay = SCH_tasks_G[0].Delay;
 		}
 	}
